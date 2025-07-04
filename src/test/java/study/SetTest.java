@@ -7,6 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,5 +62,47 @@ public class SetTest {
     void parameterizedTest2(int pattern, boolean expected) {
         boolean result = numbers.contains(pattern);
         assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("문자열 계산기 테스트")
+    void calculateTest() {
+
+        String input = "2 + 3 * 4 / 2";
+
+        // ByteArrayInputStream을 사용하여 System.in을 설정
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+
+        System.setIn(in);
+        Scanner sc = new Scanner(System.in);
+
+        String value = sc.nextLine();
+        String[] values = value.split(" ");
+
+        // 첫 번째 숫자 초기화
+        int result = Integer.parseInt(values[0]);
+
+        // 연산자를 기준으로 두 번째 숫자와 연산을 수행
+        for (int i = 1; i < values.length; i += 2) {
+            String operator = values[i];
+            int nextNumber = Integer.parseInt(values[i + 1]);
+
+            switch (operator) {
+                case "+":
+                    result += nextNumber;
+                    break;
+                case "-":
+                    result -= nextNumber;
+                    break;
+                case "*":
+                    result *= nextNumber;
+                    break;
+                case "/":
+                    result /= nextNumber;
+                    break;
+            }
+        }
+
+        assertThat(result).isEqualTo(10);
     }
 }
